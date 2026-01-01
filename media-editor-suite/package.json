@@ -1,0 +1,24 @@
+{
+  "name": "media-editor-suite",
+  "version": "1.0.0",
+  "description": "Unified media editing suite containing video and audio editors",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "video-editor",
+    "audio-editor"
+  ],
+  "scripts": {
+    "dev:video": "cd video-editor && npm run dev",
+    "dev:audio": "cd audio-editor && npm run dev",
+    "build:video": "cd video-editor && npm run build",
+    "build:audio": "cd audio-editor && npm run build",
+    "start:video": "cd video-editor && npm start",
+    "start:audio": "cd audio-editor && npm start",
+    "check:video": "cd video-editor && npm run check",
+    "check:audio": "cd audio-editor && npm run check",
+    "db:push:video": "cd video-editor && npm run db:push",
+    "db:push:audio": "cd audio-editor && npm run db:push"
+  }
+}

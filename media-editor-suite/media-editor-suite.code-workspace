@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "video-editor",
+      "name": "Video Editor"
+    },
+    {
+      "path": "audio-editor",
+      "name": "Audio Editor"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "typescript.tsdk": "node_modules/typescript/lib"
+  }
+}
