@@ -31,7 +31,7 @@ Push-Location $frontendPath
 $frontendArgs = @(
     "-NoExit"
     "-Command"
-    "cd '$frontendPath'; npm run dev"
+    "cd '$frontendPath'; npx vite --port 5000"
 )
 Start-Process powershell -ArgumentList $frontendArgs -WindowStyle Normal
 

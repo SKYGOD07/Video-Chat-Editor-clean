@@ -19,7 +19,7 @@ timeout /t 3
 REM Start Frontend in new window
 echo [2/2] Starting React Frontend on http://127.0.0.1:5000...
 cd /d "%~dp0Video-Chat-Editor"
-start "Frontend Server" cmd /k "npm run dev"
+start "Frontend Server" cmd /k "npx vite --port 5000"
 
 echo.
 echo ============================================
