@@ -1,0 +1,88 @@
+You are a senior Python engineer specializing in audio-video processing tools.
+
+Objective:
+Build a TERMINAL-BASED (CLI) podcast-style video editor in Python.
+
+The program must run using:
+python main.py
+
+No web server.
+No frontend.
+No GUI.
+Only terminal input/output.
+
+Core Workflow (MANDATORY):
+1. Program starts in terminal
+2. Ask user to provide:
+   - Path to main video file
+   - Path to audio file 1 (speaker A)
+   - Path to audio file 2 (speaker B)
+3. Validate files
+4. Analyze audio tracks
+5. Then interactively ask editing instructions
+
+Terminal Interaction Flow:
+- Ask:
+  "How many timeline segments do you want to create?"
+- For each segment:
+  - Ask start time (HH:MM:SS)
+  - Ask end time (HH:MM:SS)
+  - Ask which audio source to prioritize (audio1 / audio2 / mix)
+- Ask if silence removal is needed
+- Ask if segments should be merged or exported separately
+
+Podcast Logic (IMPORTANT):
+- Use audio energy / timestamps to decide which speaker is dominant
+- Arrange video cuts based on active speaker audio
+- Sync cuts accurately
+- Final output should feel like a podcast editor
+
+Tech Stack (STRICT):
+- Python 3.10+
+- FFmpeg (CLI)
+- ffmpeg-python OR subprocess
+- Silero-VAD (for speech detection)
+- pydub (audio slicing)
+- numpy
+- torch (CPU only)
+
+Required Features:
+- Multiple timeline cuts
+- Silence removal
+- Audio-based segment prioritization
+- Merge final video
+- Save output to /output folder
+
+Project Structure (MANDATORY):
+
+podcast_video_editor/
+├── main.py
+├── core/
+│   ├── input_handler.py
+│   ├── timeline_manager.py
+│   ├── audio_analyzer.py
+│   ├── silence_remover.py
+│   ├── ffmpeg_engine.py
+│   └── merger.py
+├── utils/
+│   └── time_parser.py
+├── output/
+├── requirements.txt
+└── README.md
+
+Rules:
+- FULL runnable code only
+- Clear terminal prompts
+- Handle invalid input gracefully
+- Assume FFmpeg is installed
+- No placeholder functions
+- No pseudocode
+
+Output Instructions:
+1. Generate folder structure
+2. Generate all Python files
+3. Generate requirements.txt
+4. Generate README with terminal usage
+5. Stop after complete CLI tool is built
+
+This is a functional podcast-style editor, not a demo.

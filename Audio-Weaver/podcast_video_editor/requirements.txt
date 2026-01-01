@@ -1,0 +1,7 @@
+# podcast_video_editor/requirements.txt
+ffmpeg-python
+pydub
+numpy
+torch
+torchaudio
+tqdm
