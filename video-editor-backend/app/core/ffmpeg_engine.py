@@ -9,12 +9,39 @@ from typing import Optional
 class FFmpegEngine:
     """Handles all FFmpeg operations."""
     
+    FFMPEG_CMD = None
+    FFPROBE_CMD = None
+    
+    @staticmethod
+    def _find_ffmpeg():
+        """Find FFmpeg executable - check local installation first, then system PATH."""
+        if FFmpegEngine.FFMPEG_CMD is not None:
+            return
+        
+        # Check local installation in Video-Chat-Editor-clean folder
+        local_paths = [
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "ffmpeg-8.0.1", "bin", "ffmpeg.exe"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "ffmpeg-8.0.1", "bin", "ffmpeg"),
+        ]
+        
+        for path in local_paths:
+            if os.path.exists(path):
+                FFmpegEngine.FFMPEG_CMD = path
+                ffprobe_path = path.replace("ffmpeg", "ffprobe")
+                FFmpegEngine.FFPROBE_CMD = ffprobe_path
+                return
+        
+        # Fallback to system PATH
+        FFmpegEngine.FFMPEG_CMD = "ffmpeg"
+        FFmpegEngine.FFPROBE_CMD = "ffprobe"
+    
     @staticmethod
     def check_installed() -> bool:
         """Check if FFmpeg is installed."""
+        FFmpegEngine._find_ffmpeg()
         try:
-            subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
-            subprocess.run(['ffprobe', '-version'], capture_output=True, check=True)
+            subprocess.run([FFmpegEngine.FFMPEG_CMD, '-version'], capture_output=True, check=True)
+            subprocess.run([FFmpegEngine.FFPROBE_CMD, '-version'], capture_output=True, check=True)
             return True
         except (subprocess.CalledProcessError, FileNotFoundError):
             return False
@@ -22,8 +49,9 @@ class FFmpegEngine:
     @staticmethod
     def get_duration(video_path: str) -> float:
         """Get video duration in seconds."""
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffprobe',
+            FFmpegEngine.FFPROBE_CMD,
             '-v', 'error',
             '-show_entries', 'format=duration',
             '-of', 'json',
@@ -48,8 +76,9 @@ class FFmpegEngine:
             start: Start time in seconds
             end: End time in seconds
         """
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-i', input_path,
             '-ss', str(start),
             '-to', str(end),
@@ -82,8 +111,9 @@ class FFmpegEngine:
                 escaped_file = file.replace('\\', '\\\\')
                 f.write(f"file '{escaped_file}'\n")
         
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-f', 'concat',
             '-safe', '0',
             '-i', concat_file,
@@ -111,8 +141,9 @@ class FFmpegEngine:
             subtitle_path: Subtitle file path
             output_path: Output video
         """
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-i', video_path,
             '-i', subtitle_path,
             '-c', 'copy',
@@ -140,8 +171,9 @@ class FFmpegEngine:
         if speed <= 0:
             raise ValueError("Speed must be positive")
         
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-i', input_path,
             '-filter:v', f'setpts=PTS/{speed}',
             '-filter:a', f'atempo={speed}',
@@ -158,8 +190,9 @@ class FFmpegEngine:
     @staticmethod
     def extract_audio(video_path: str, output_path: str) -> bool:
         """Extract audio from video."""
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-i', video_path,
             '-q:a', '9',
             '-n',
@@ -175,8 +208,9 @@ class FFmpegEngine:
     @staticmethod
     def resize_video(input_path: str, output_path: str, width: int, height: int) -> bool:
         """Resize video."""
+        FFmpegEngine._find_ffmpeg()
         cmd = [
-            'ffmpeg',
+            FFmpegEngine.FFMPEG_CMD,
             '-i', input_path,
             '-vf', f'scale={width}:{height}',
             '-y',

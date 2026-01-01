@@ -2,7 +2,13 @@ import sys
 import json
 import os
 import time
-import ffmpeg
+import subprocess
+
+# Configure FFmpeg path - using local installation
+FFMPEG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "ffmpeg-8.0.1", "bin", "ffmpeg.exe")
+if not os.path.exists(FFMPEG_PATH):
+    # Fallback to system ffmpeg if local not found
+    FFMPEG_PATH = "ffmpeg"
 
 # Mock imports for now to ensure it runs even if install fails
 # In production, these would be real imports
@@ -11,6 +17,26 @@ try:
     import torch
 except ImportError:
     whisper = None
+
+# Simple ffmpeg wrapper using subprocess
+class FFmpegWrapper:
+    @staticmethod
+    def input(path):
+        return {"input": path}
+    
+    @staticmethod
+    def output(stream, output_path):
+        return {"input": stream.get("input"), "output": output_path}
+    
+    @staticmethod
+    def run(stream, overwrite_output=False):
+        cmd = [FFMPEG_PATH, "-i", stream["input"]]
+        if overwrite_output:
+            cmd.append("-y")
+        cmd.append(stream["output"])
+        subprocess.run(cmd, check=True, capture_output=True)
+
+ffmpeg = FFmpegWrapper()
 
 def log(data):
     print(json.dumps(data), flush=True)
